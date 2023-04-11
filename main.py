@@ -1,4 +1,5 @@
-import re, requests, platform, subprocess, socket
+import re, requests, platform, subprocess, socket, pathlib
+
 
 
 max_score = 0
@@ -181,3 +182,6 @@ else:
     user_grade = "F"
 final_outmsg = "You earned {0} points out of {1} total points. To increase your score, please read through the report below and refer to any included URLs.\nSecurity Score:\t{2}%\nSecurity Grade: {3}\n\n{4}\n\n{5}".format(user_score, max_score, user_score_percent, user_grade, pros_outmsg, cons_outmsg)
 print(final_outmsg)
+
+
+# output_html = open("C:\\Users\\Suleiman JK\\Desktop\\Static_hash\\test","r")
