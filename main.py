@@ -3,8 +3,6 @@ from tabulate import tabulate
 from datetime import date
 import matplotlib.pyplot as plt
 from io import BytesIO
-import seaborn as sns
-
 
 max_score = 0
 user_score = 0
@@ -16,20 +14,14 @@ def windows10_version():
     response = requests.get("https://learn.microsoft.com/en-us/windows/release-health/release-information")
     html = response.text
     matches = re.findall(r"(\d+)\.\d+", html)
-#     print(matches)
-    if matches:
-        return matches
-    else:
-        return None
+    return matches
+
 def windows11_version():
     response = requests.get("https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information")
     html = response.text
     matches = re.findall(r"(\d+)\.\d+", html)
-#     print(matches)
-    if matches:
-        return matches
-    else:
-        return None
+    return matches
+
 
 
 def get_account_info():
@@ -80,7 +72,6 @@ if platform.system() == 'Windows':
                                    'You are running a supported version of Windows!',
                                    'Read more about why it is important to update Windows here: <a href="{0}">{0}</a>'.format('https://www.zunesis.com/why-install-windows-updates/')
                                    ])
-            # cons_outmsg = cons_outmsg + "\tUpdates - \n\t\n\n"
             break
         else:
             continue
@@ -90,7 +81,6 @@ if platform.system() == 'Windows':
                                'Your version of Windows is Outdated, consider updating your version of Windows to the newest release. This will help reduce the probability of OS vulnerabilities being exploited on your system.',
                                'Read more about why it is important to update Windows here: <a href="https://www.zunesis.com/why-install-windows-updates/">https://www.zunesis.com/why-install-windows-updates/</a>'
                                ])
-        # pros_outmsg = pros_outmsg + "\tUpdates - \n\tRead more about why it is important to update Windows here: https://www.zunesis.com/why-install-windows-updates/\n\n"
 else:
     print('This script only works for Windows systems.')
 
@@ -110,21 +100,18 @@ if (0 < int(max_pass_age) <= 90):
                         'Your maximum password age is set to between 1 and 90 days. The best practice is to set this value between 30 and 90 days to prevent using an insecure or compromised password for an extended amount of time.',
                         'Read more about the importance password age here: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/windows/security/')
                         ])
-    # pros_outmsg = pros_outmsg + '+5\t - \n\tRead more about the importance password age here: https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/maximum-password-age\n\n'
 elif max_pass_age == 'UNLIMITED':
     cons_outmsg.append(['-5',
                     'Policy: Maximum Password Age',
                     'Your maximum password age is set to either a vaule less than 1 or greater than  90 days. The best practice is to set this value between 30 and 90 days to prevent using an insecure or compromised password for an extended amount of time.',
                     'Go here to learn how to change this policy on your computer: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/maximum-password-age')
                     ])
-    # cons_outmsg = cons_outmsg + '-5\tPolicy: Maximum Password Age - \n\tGo here to learn how to change this policy on your computer: \n\n'
 else:
     cons_outmsg.append(['-5',
                     'Policy: Maximum Password Age',
                     'Your maximum password age is set to either a vaule less than 1 or greater than  90 days. The best practice is to set this value between 30 and 90 days to prevent using an insecure or compromised password for an extended amount of time.',
                     'Go here to learn how to change this policy on your computer: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/maximum-password-age')
                     ])
-    # cons_outmsg = cons_outmsg + '-5\tPolicy: Maximum Password Age - \n\tGo here to learn how to change this policy on your computer: https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/maximum-password-age\n\n'
 
 max_score += 7
 if int(min_pass_len) >= 8:
@@ -135,15 +122,12 @@ if int(min_pass_len) >= 8:
                         'Your minimum password length policy is set to a value of 8 characters or more. Best practice is to use a password with a length of 8 or more characters to prevent cyber attacks, the longer the better.',
                         'Read more about password length policy and best Practice here: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/minimum-password-length')
                         ])
-    # pros_outmsg = pros_outmsg + '+'+str(pass_len_score)+'\tPolicy: Minimum Password Length - \n\t\n\n'
 else:
     cons_outmsg.append(['-7',
                         'Policy: Minimum Password Length',
                         'Your minimum password length policy is either disabled or set to a value less than 7 characters. Best practice is to use a password with a length of 8 or more characters to prevent cyber attacks, the longer the better.',
                         'Go here to learn how to change this policy on your computer: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/minimum-password-length')
                         ])
-    # cons_outmsg = cons_outmsg + '\t - \n\t\n\n'
-
 
 max_score += 10
 if lockout_threshold == 'Never':
@@ -152,7 +136,6 @@ if lockout_threshold == 'Never':
                         'Your account lockout threshold policy is set to never, meaning an attacker could guess passwords indefinitiely until they find a password that will let them log into your machine. Best practice is to use a lockout threshold of 10, but there is no one-size-fits-all solution.',
                         'Go here to learn how to change this policy on your computer: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-threshold')
                         ])
-    # cons_outmsg = cons_outmsg + '\t - \n\t\n\n'
 elif (0 < int(lockout_threshold) <= 20):
     user_score += 5
     pros_outmsg.append(['+5',
@@ -160,7 +143,6 @@ elif (0 < int(lockout_threshold) <= 20):
                         'Your account lockout threshold policy is set to a value between 1 and 20, meaning that an attacker will be locked our for some period of time if they repeatedly, incorrectly guess a login. Best practice is to use a lockout threshold of 10, but there is no one-size-fits-all solution.',
                         'Read more about Account Lockout Threshold Policy here: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-threshold')
                         ])
-    #  = pros_outmsg + '\t - \n\t\n\n'
     if int(lockout_duration) == 0:
         user_score += 5
         pros_outmsg.append(['+5',
@@ -168,7 +150,6 @@ elif (0 < int(lockout_threshold) <= 20):
                         'Your account lockout duration policy is set to 0, meaning that once the lockout threshold has been met, an account will be locked out until an admin unlocks it.',
                         'Read more about Account Lockout Duration Policy here: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-duration')
                         ])
-        # pros_outmsg = pros_outmsg + '\t - \n\t\n\n'
     elif 0 < int(lockout_duration) < 15:
         user_score += 2
         pros_outmsg.append(['+2',
@@ -176,7 +157,6 @@ elif (0 < int(lockout_threshold) <= 20):
                         'Your account lockout duration policy is set to a value between 1 and 15, meaning that once the lockout threshold has been met, an account will be locked out from 1 to 15 minutes depending on the policy. Best practice is to set this value to 15 minutes, your score is 2 out of 5.',
                         'Learn how to change this policy here Policy here: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-duration')
                         ])
-        # pros_outmsg = pros_outmsg + '\t - \n\t\b\b'
     elif int(lockout_duration) >= 15:
         user_score += 5
         pros_outmsg.append(['+2',
@@ -184,7 +164,6 @@ elif (0 < int(lockout_threshold) <= 20):
                         'Your account lockout duration policy is set to a value of 15 minutes or greater, meaning that once the lockout threshold has been met, an account will be locked out for 15+ minutes depending on the policy. Best practice is to set this value to at least 15 minutes.',
                         'Read more about Account Lockout Duration policy here: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-duration')
                         ])
-        #  = pros_outmsg + '\t - \n\t\n\n'
 elif (int(lockout_threshold) > 20):
     if int(lockout_duration) == 0:
         user_score += 5
@@ -193,7 +172,6 @@ elif (int(lockout_threshold) > 20):
                         'Your account lockout duration policy is set to 0, meaning that once the lockout threshold has been met, an account will be locked out until an admin unlocks it.',
                         'Read more about Account Lockout Duration Policy here: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-duration')
                         ])
-        #  = pros_outmsg + '\t - \n\t\n\n'
     elif 0 < int(lockout_duration) < 15:
         user_score += 2
         pros_outmsg.append(['+2',
@@ -201,7 +179,6 @@ elif (int(lockout_threshold) > 20):
                         'Your account lockout duration policy is set to a value between 1 and 15, meaning that once the lockout threshold has been met, an account will be locked out from 1 to 15 minutes depending on the policy. Best practice is to set this value to 15 minutes, your score is 2 out of 5.',
                         'Learn how to change this policy here Policy here: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-duration')
                         ])
-        #  = pros_outmsg + '\t - \n\t\b\b'
     elif int(lockout_duration) >= 15:
         user_score += 5
         pros_outmsg.append(['+2',
@@ -209,7 +186,6 @@ elif (int(lockout_threshold) > 20):
                         'Your account lockout duration policy is set to a value of 15 minutes or greater, meaning that once the lockout threshold has been met, an account will be locked out for 15+ minutes depending on the policy. Best practice is to set this value to at least 15 minutes.',
                         'Read more about Account Lockout Duration policy here: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-duration')
                         ])
-        #  = pros_outmsg + '\t - \n\t\n\n'
 
 else:
     cons_outmsg.append(['-5',
@@ -217,9 +193,6 @@ else:
                         'Your account lockout threshold policy is set to a value greater than 20, meaning that an attacker will be locked our for some period of time if they incorrectly the password to your system 21 or more times. Best practice is to use a lockout threshold of 10, but there is no one-size-fits-all solution.',
                         'Go here to learn how to change this policy on your computer: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-threshold')
                         ])
-    #  = cons_outmsg + '\t - \n\t\n\n'
-
-
 
 defender_vals = get_defender_info()
 anti_mal = defender_vals[3]
@@ -237,14 +210,12 @@ if (anti_mal == 'True') and (anti_spy == 'True') and (anti_virus == 'True'):
                         'Windows Security appears to be active and running with anti-malware, anti-spyware, and anti-virus all enabled. This is best practice and will help prevent your computer and data from becoming compromised.',
                         'Read more about Windows Security here: <a href="{0}">{0}</a>'.format('https://support.microsoft.com/en-us/windows/stay-protected-with-windows-security-2ae0363d-0ada-c064-8b56-6a39afb6a963')
                         ])
-    #  = pros_outmsg + '\t - \n\t\n\n'
 else:
     cons_outmsg.append(['-10',
                         'Windows Security: Core Protections',
                         'Microsoft Security is either not running, not enabled, or running without one or more core protections being active. Running Microsoft Defender with the anti-malware, anti-spyware, and anti-virus functionalities enabled will help prevent malware threats from compromising your computer.',
                         'Go here to learn how to configure Windows Security with anti-malware: <a href="{0}">{0}</a>'.format('https://support.microsoft.com/en-us/windows/virus-threat-protection-in-windows-security-1362f4cd-d71a-b52a-0b66-c2820032b65e')
                         ])
-    #  = cons_outmsg + '\t - \n\t\n\n'
 
 max_score += 10
 if behavioral == 'True':
@@ -254,14 +225,12 @@ if behavioral == 'True':
                         'Windows Security appears to be active and running with behavioral monitoring all enabled. This is best practice and will help prevent your computer and data from becoming compromised.',
                         'Read more about why behavioral monitoring is important here: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/behavioral-blocking-containment?view=o365-worldwide')
                         ])
-    #  = pros_outmsg + '\t - \n\t\n\n'
 else:
     cons_outmsg.append(['-10',
                         'Windows Security: Behavioral Monitoring',
                         'Microsoft Security does not have behavioral monitoring enabled, meanining that your system is vulnerable to attack / compromise from fileless malware, human-operated attacks, and highly-advanced malware threats. Running Windows Security with behavioral monitoring enabled will help prevent these types of malware from compromising your computer and data.',
                         'Go here to learn how to configure Windows Security with behavioral monitoring: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-real-time-protection-microsoft-defender-antivirus?view=o365-worldwide')
                         ])
-    #  = cons_outmsg + '\t - \n\t\n\n'
 
 max_score += 10
 if realtime == 'True':
@@ -271,14 +240,12 @@ if realtime == 'True':
                         'Windows Security appears to be active and running with real-time protection enabled. This is best practice and means that Windows Security is working to keep your computer and your data safe.',
                         'Read more about why real-time protection is important here: <a href="{0}">{0}</a>'.format('https://www.cyber.gov.au/acsc/view-all-content/guidance/turn-real-time-protection-windows-10')
                         ])
-    #  = pros_outmsg + '\t - \n\t \n\n'
 else:
     cons_outmsg.append(['-10',
                         'Windows Security: Real-Time Protection',
                         'Windows Security does not have real-time protection enabled, this will leave you exposed to malicious files and threats between anti-virus / anti-malware scans. Running Windows Security with real-time protection is best practice to keep your computer and your data safe.',
                         'Go here to learn how to configure Windows Security with always-on protection: <a href="{0}">{0}</a>'.format('https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-real-time-protection-microsoft-defender-antivirus?view=o365-worldwide')
                         ])
-    #  = cons_outmsg + '\t - \n\t \n\n'
 
 max_score += 10
 if out_of_date == 'False':
@@ -288,14 +255,12 @@ if out_of_date == 'False':
                         'Windows Security, its signatures, and its detections are all up to date. This is best practice and means that Windows Security is working to keep your computer and your data safe by using the more current information it has access to.',
                         'Read more about why it is important to keep Windows Security up-to-date: <a href="{0}">{0}</a>'.format('https://ecmanagedit.com/importance-windows-updates/')
                         ])
-    #  = pros_outmsg + '\t - \n\t \n\n'
 else:
     cons_outmsg.append(['-10',
                         'Windows Security: Update',
                         "Windows Security, its signatures, and/or it's detections are out of date and need to be updated. Update Windows Security immediately to ensure that your computer and data remain as safe as possible.",
                         'Go here to learn how to update Windows Security: <a href="{0}">{0}</a>'.format('https://support.microsoft.com/en-us/windows/update-windows-security-signatures-726d462d-b2a8-5bb2-8a9e-5d5871b06e05')
                         ])
-    #  = cons_outmsg + "\t - \n\t \n\n"
 
 open_ports, closed_ports, port_range = scan_ports()
 max_score += len(port_range)*5
@@ -306,7 +271,6 @@ if len(closed_ports) != 0:
                         'Your computer has {0} out of {1} commonly abused ports closed. It is best practice to close unused and unneeded ports at all times, as vulnerable ports that are left open can be used to compromise a system.'.format(len(closed_ports), len(port_range)),
                         'Read more about the importance of closing vulnerable ports: <a href="{0}">{0}</a>'.format('https://blog.netwrix.com/2022/08/16/open-network-ports')
                         ])
-#  = pros_outmsg + '+\t - \n\t /\n\n', len(closed_ports)*5)
 
 if len(open_ports) != 0:
     for port in open_ports:
@@ -317,9 +281,6 @@ if len(open_ports) != 0:
                         'Port {0} is currently open on your system. This port has been idenfitied as a commonly abused port. If you are not hosting or using any services that utilize port {0}, then please close it.'.format(port),
                         'Go here to learn about the vulnerabilities and services associated with port {0} <a href="{0}">{0}</a><br>Go here to learn how to close a port in Windows: <a href="{1}">{1}</a>'.format(port_url, generic_url)
                         ])
-    #  = cons_outmsg + '\t - \n\t \n\n'
-
-
 
 user_score_percent = round((user_score/max_score)*100, 2)
 if user_score_percent == 100:
@@ -341,24 +302,6 @@ elif 60 <= user_score_percent < 65:
 else:
     user_grade = "F"
 
-# html_template = """
-# <!DOCTYPE html>
-# <html>
-# <head>
-# 	<title>Security Report Card</title>
-# 	<meta charset="UTF-8">
-# 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-# </head>
-# <body>
-# 	<h1>Security Report Card</h1>
-# 	<p>Security Score:{0}{2}%<br>Overall Grade:{3}</p>
-# 	<h2>Positive Security Practices</h2>
-#     {4}
-#     <h2>Negative Security Practices</h2>
-#     {5}
-# </body>
-# </html>
-# """
 html_template = """
 <!DOCTYPE html>
 <html>
@@ -389,19 +332,12 @@ html_template = """
 </html>
 """
 
-# final_outmsg = "You earned {0} points out of {1} total points. To increase your score, please read through the report below and refer to any included URLs.\nSecurity Score:\t{2}%\nSecurity Grade: {3}\n\n{4}\n\n{5}".format(user_score, max_score, user_score_percent, user_grade, pros_outmsg, cons_outmsg, )
-# print(final_outmsg)
-
-
-# output_html = open("C:\\Users\\Suleiman JK\\Desktop\\Static_hash\\test","r")
 today = date.today()
 today1 = today.strftime("%m_%d_%Y")
 today2 = today.strftime("%m/%d/%Y")
-# curr_time = int(time.time())
 
 current_path = pathlib.Path().resolve()
 output_html_path = str(current_path) + '//Report_Card_'+str(today1)+'.html'
-# output_html_path = str(current_path) + '//Report_Card.html'
 
 pros_html = html.unescape(tabulate(pros_outmsg, tablefmt='html', headers='firstrow'))
 cons_html = html.unescape(tabulate(cons_outmsg, tablefmt='html', headers='firstrow'))
@@ -416,9 +352,7 @@ plt.rcParams["font.weight"] = "bold"
 plt.rcParams["font.size"] = 20
 plt.pie(scores, labels = labels, colors = colors, autopct='%.2f%%')
 
-
 fig = plt.gcf()
-# plt.show()
 
 plt.draw()
 plt.figure()
