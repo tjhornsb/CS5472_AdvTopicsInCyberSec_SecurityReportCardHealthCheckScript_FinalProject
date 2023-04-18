@@ -2,6 +2,9 @@
 ### Author: Trevor Hornsby
 ### Contact: tjhornsb@mtu.edu
 
-About: 
+## About
+This project was created to address multiple issues with current, widely-used personal security products. More notably, this program is intended to give users full visibility into the security coverage and gaps, give users the resources needed to learn more about the granular security controls that contribute to their security posture, and finally, it adds a gamified scoring system so that users are encouraged to maximize their score and build a better security posture.
 
-Instructions: 
+## Requirements
+ - Python 3.9 or higher
+ - Packages: tabulate, datetime, matplotlib, io, re, requests, platform, subprocess, socket, pathlib, html, webbrowser, base64
