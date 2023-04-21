@@ -9,7 +9,7 @@ This project was created to address multiple issues with current, widely-used pe
  - Python 3.9 or higher
  - Packages: tabulate, datetime, matplotlib, io, re, requests, platform, subprocess, socket, pathlib, html, webbrowser, base64
 
-## Packages
+### Installing Packages
 Some packages used in this program are not pre-installed by Python. 
 Please run the commands below if you run into missing packes errors.
 
