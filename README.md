@@ -13,5 +13,5 @@ This project was created to address multiple issues with current, widely-used pe
 Some packages used in this program are not pre-installed by Python. 
 Please run the commands below if you run into missing packes errors.
 
-python3 -m pip install --upgrade pip
-python3 -m pip install tabulate requests matplotlib
+```python3 -m pip install --upgrade pip```\
+```python3 -m pip install tabulate requests matplotlib```
